@@ -28,7 +28,8 @@ class BinarySearchTree:
         elif value.key >= self.key:
             self.right = value
             value.parent = self
-        e:
+        elif self.parent:
+            #place holder not a real value
             self = self.right
             BinarySearchTree.insert(self, value)
 
