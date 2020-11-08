@@ -3,7 +3,7 @@
 # If you can't figure it out recursively, use a loop. (But then refactor
 # your implementation into a recursive one!)
 # Your implementation should pass the tests in test_bst.py.
-# YOUR NAME
+# Abhimanyu. bais
 
 import test_bst as bst
 
@@ -17,59 +17,80 @@ class BinarySearchTree:
         self.key = key
         self.parent = self.key
 
-    def insert(self, value):
-        if value.key <= self.key:
-            if self.left is not None:
-                self.left = value
-                value.parent = self
-            else:
-                self.left
-                BinarySearchTree.insert(self, value)
-        elif value.key >= self.key:
-            self.right = value
-            value.parent = self
-        elif self.parent:
-            #place holder not a real value
-            self = self.right
-            BinarySearchTree.insert(self, value)
+    def insert(self, child):
 
-        else:
-            self.key = value.key
-            self.parent = value.parent
+        if child.key <= self.key:
+            if self.left is None:
+                self.left = child
+                child.parent = self
+
+            else:
+                self.left.insert(child)
+
+        elif child.key > self.key:
+            if self.right is None:
+                self.right = child
+                child.parent = self
+
+            else:
+                self.right.insert(child)
 
     def search(self, value):
         if self:
-            if value < self.parent:
-                return BinarySearchTree.search(self.left, value)
-            if value > self.parent:
-                return BinarySearchTree.search(self.right, value)
+            if self.key == value:
+                return self
+            elif value < self.key:
+                return None if self.left is None else self.left.search(value)
+            elif value > self.key:
+                return None if self.right is None else self.right.search(value)
             else:
                 return self
 
     def delete(self, value):
-        self.search(value)
-        self = ('hi')
+        node = self.search(value)
 
+        if node is None:
+            # return self at bottom
+            pass
 
+        elif node == self:
+            # if the value we want to delete is the root itself
 
+            if self.left is None and self. right is None:
+                # This is for a single level tree
+                self = None
 
+            elif self.right is not None:
+                # This is for when the tree has a right child which will be the new root
+                if self.left is not None:
+                    self.right.left = self.left
+                self = self.right
 
-        # def search(root, val):
-        #     '''
-        #     The Function will Search the Element is the given Tree And return Boolean value.
-        #     | root = root of given tree.
-        #     | val  = Value is Searching Element.
-        #     '''
-        #     if root:
-        #         # if the value is smaller than the root ,then it will again recursive in the Left child Node.
-        #         if val < root.val:
-        #             return search(root.left, val)
-        #         # if the value is greater than the root ,then it will again recursive in the right child Node.
-        #         elif val > root.val:
-        #             return search(root.right, val)
-        #         # if the Both condition get False then it got value.
-        #         else:
-        #             return True
-        #     # If the all recursion complied and didn't get them if will return False.
-        #     else:
-        #         return False
+            elif self.left is not None and self.right is None:
+                # This is for when the tree has a left child which will be the new root
+                if self.right is not None:
+                    self.left.right = self.right
+                self = self.left
+
+        elif node.key > node.parent.key:
+            node.parent.right = None
+
+        elif node.key <= node.parent.key:
+            node.parent.left = None
+
+        return self
+
+    def is_leaf(self):
+        return self.left is None and self.right is None
+
+    def has_left_child(self):
+        return self.left is not None
+
+    def has_right_child(self):
+        return self.left is not None
+
+    def minimum(self):
+        itr = self
+        while itr.left:
+            itr = itr.left
+        return itr
